@@ -10,6 +10,7 @@ const Services = () => {
       .then((data) => setServices(data))
       .catch((error) => console.log(error));
   }, []);
+  
   return (
     <div>
       <div className="px-[140px] grid grid-cols-3 gap-5 my-10">

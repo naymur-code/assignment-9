@@ -1,17 +1,34 @@
 import React, { useContext } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../provider/AuthProvider";
 import { updateProfile } from "firebase/auth";
 import auth from "../firebase/firebase.config";
+import { FaGoogle } from "react-icons/fa";
 
 const Register = () => {
-  const { registerWithEmailAndPass,setUser } = useContext(AuthContext);
+  const { registerWithEmailAndPass, setUser, googleLogin } =
+    useContext(AuthContext);
+  const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const pass = e.target.password.value;
     const photoURL = e.target.photoURL.value;
     const name = e.target.name.value;
+
+    const uppercase = /[A-Z]/;
+    const lowercase = /[a-z]/;
+
+    if (pass.length < 6) {
+      return alert("6+ password");
+    }
+    if (!uppercase.test(pass)) {
+      return alert("need uppercse");
+    }
+    if (!lowercase.test(pass)) {
+      return alert("need lowercase");
+    }
+
     registerWithEmailAndPass(email, pass)
       .then((result) => {
         updateProfile(auth.currentUser, {
@@ -19,11 +36,22 @@ const Register = () => {
           photoURL: photoURL,
         })
           .then(() => {
-            setUser(result.user)
+            setUser(result.user);
+            navigate("/");
           })
           .catch((error) => console.log(error));
       })
       .catch((error) => console.log(error));
+  };
+
+  const handleLoginWithGoogle = () => {
+    googleLogin()
+      .then((result) => {
+        setUser(result.user);
+        navigate("/");
+      })
+      .catch((error) => console.log(error));
+    console.log("ff");
   };
   return (
     <div className="hero bg-base-200 min-h-screen">
@@ -63,6 +91,13 @@ const Register = () => {
                 <div>
                   <a className="link link-hover">Forgot password?</a>
                 </div>
+                <button
+                  onClick={handleLoginWithGoogle}
+                  className="btn btn-neutral mt-4"
+                >
+                  <FaGoogle />
+                </button>
+
                 <button className="btn btn-neutral mt-4">Login</button>
                 <p className="my-3">
                   Already have a account?{" "}

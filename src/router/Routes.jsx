@@ -5,6 +5,9 @@ import MyProfile from "../pages/MyProfile";
 import Services from "../pages/Services";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import PrivateRoute from "./PrivateRoute";
+import ServiceDetails from "../pages/ServiceDetails";
+import ForgetPass from "../pages/ForgetPass";
 
 const router = createBrowserRouter([
   {
@@ -14,9 +17,21 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "/home", element: <Home /> },
       { path: "/services", element: <Services /> },
-      { path: "/profile", element: <MyProfile /> },
+      { path: "/serviceDetails/:id", element: <ServiceDetails /> },
+      {
+        path: "/profile",
+        element: (
+          <PrivateRoute>
+            <MyProfile />
+          </PrivateRoute>
+        ),
+      },
       { path: "/login", element: <Login /> },
-      { path: "/signup", element: <Register /> }
+      { path: "/signup", element: <Register /> },
+      {
+        path: "/forget/:email",
+        element: <ForgetPass />,
+      },
     ],
   },
 ]);
